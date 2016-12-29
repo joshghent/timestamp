@@ -3,7 +3,7 @@
 var express = require('express');
 var path = require('path')
 var app = express();
-var port = Number(process.env.PORT || 3005);
+var port = 3005;
 var http = require('http').Server(app);
 var api = require('./timestamp.js');
 

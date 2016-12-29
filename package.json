@@ -19,7 +19,8 @@
   "devDependencies": {
     "chai": "3.5.0",
     "chai-http": "3.0.0",
-    "chai-match-json": "0.1.2",
-    "mocha": "3.2.0"
+    "mocha": "3.2.0",
+    "should": "11.1.2",
+    "supertest": "2.0.1"
   }
 }

@@ -1,32 +1,79 @@
-process.env.NODE_ENV = 'test';
-
 const timestamp = require('./../timestamp.js');
 const chai = require('chai');
 const chaiHttp = require('chai-http');
 const server = require('../server.js');
 const should = chai.should();
-const jsonMatch = require('chai-match-json');
+const expect = chai.expect();
+const request = require('supertest');
+const assert = require('assert');
+let url = 'http://localhost:3005'
 
-chai.use(chaiHttp, jsonSchema);
+chai.use(chaiHttp);
 
-describe('NL: Long date', () => {
-  it('should return a json object', (done) => {
-    chai.request(server)
-        .get('/Wednesday 28 December 2016')
-        .end((err, res) => {
-          res.should.have.status(200);
-          res.should.be.json;
-          res.body.should.be.a('object');
-          done();
-        });
+describe('Natural Language', () => {
+  it('Long date should return correct timestamp and input date', (done) => {
+    request(url)
+      .put('/Wednesday 28 December 2016')
+      .expect('Content-Type', '/json/')
+      .expect(200)
+      .end((err, res) => {
+        res.body.unix.should.equal(1482883200);
+        res.body.natural.should.equal('Wednesday 28 December 2016');
+        done();
+      });
+  });
+
+  it('Short date should return correct timestamp and input date', (done) => {
+    request(url)
+      .put('/Wed 28 Dec 2016')
+      .expect('Content-Type', '/json/')
+      .expect(200)
+      .end((err, res) => {
+        res.body.unix.should.equal(1482883200);
+        res.body.natural.should.equal('Wednesday 28 December 2016');
+        done();
+      });
+  });
+
+  it('Input without day name returns correctly', (done) => {
+    request(url)
+      .put('/28 Dec 2016')
+      .expect('Content-Type', '/json/')
+      .expect(200)
+      .end((err, res) => {
+        res.body.unix.should.equal(1482883200);
+        res.body.natural.should.equal('Wednesday 28 December 2016');
+        done();
+      });
+  });
+
+  it('Input containing the wrong day name will still return the correct date', (done) => {
+    request(url)
+      .put('/Monday 28 December 2016')
+      .expect('Content-Type', '/json/')
+      .expect(200)
+      .end((err, res) => {
+        res.body.unix.should.equal(1482883200);
+        res.body.natural.should.equal('Wednesday 28 December 2016');
+        done();
+      });
+  });
+
+  it('Submitted just the month and year will return the first', (done) => {
+    request(url)
+      .put('/Jan 2016')
+      .expect('Content-Type', '/json/')
+      .expect(200)
+      .end((err, res) => {
+        res.body.unix.should.equal(1451606400);
+        res.body.natural.should.equal('Friday 1 January 2016');
+        done();
+      });
   });
 });
 
 /*
 describe('Unix timestamp')
 describe('ISO format')
-describe('NL: Short date')
-describe('NL: Day number, month and year')
-describe('NL: Wrong day name will still return correct date')
 describe('NL: Month and year will return the first')
 */
