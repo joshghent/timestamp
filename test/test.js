@@ -72,8 +72,33 @@ describe('Natural Language', () => {
   });
 });
 
+describe('Other Inputs', () => {
+  it('Unix timestamps return the correct natural date', (done) => {
+    request(url)
+      .put('/1482883200')
+      .expect('Content-Type', '/json/')
+      .expect(200)
+      .end((err, res) => {
+        res.body.unix.should.equal(1482883200);
+        res.body.natural.should.equal('Wednesday 28 December 2016');
+        done();
+      });
+  });
+
+  it('ISO format inputs return the correct timestamp and date', (done) => {
+    request(url)
+      .put('/2016-12-28')
+      .expect('Content-Type', '/json/')
+      .expect(200)
+      .end((err, res) => {
+        res.body.unix.should.equal(1482883200);
+        res.body.natural.should.equal('Wednesday 28 December 2016');
+        done();
+      });
+  });
+});
+
 /*
 describe('Unix timestamp')
 describe('ISO format')
-describe('NL: Month and year will return the first')
 */
