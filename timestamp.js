@@ -10,10 +10,15 @@ function timeStamp(req, res) {
 
   if(isNaN(date) === false && date != null){
     res.json({
-      "unix"   : Date.parse(date) / 1000,
-      "natural": days[date.getDay() - 1] + ' ' + date.getDate() + ' ' + months[date.getMonth()] + ' ' + date.getUTCFullYear()
+      unix   : Date.parse(date) / 1000,
+      natural: days[date.getDay() - 1] + ' ' + date.getDate() + ' ' + months[date.getMonth()] + ' ' + date.getUTCFullYear()
     });
-  } else { res.sendStatus(400); }
+  } else { 
+    res.json({
+      unix   : null,
+      natural: null
+    })
+  }
 }
 
 module.exports = timeStamp;

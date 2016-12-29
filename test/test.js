@@ -96,9 +96,16 @@ describe('Other Inputs', () => {
         done();
       });
   });
-});
 
-/*
-describe('Unix timestamp')
-describe('ISO format')
-*/
+  it('Invalid inputs should return null', (done) => {
+    request(url)
+      .put('/wasd')
+      .expect('Content-Type', '/json/')
+      .expect(200)
+      .end((err, res) => {
+        should.equal(res.body.unix, null);
+        should.equal(res.body.natural, null);
+        done();
+      });
+  });
+});
